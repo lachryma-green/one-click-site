@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>ワンクリック詐欺体験サイト</title>
+<!--<meta http-equiv="Refresh" content="10;URL=http://umeshin.html.xdomain.jp/">-->
+</head>
+<style>
+    body {
+        background-color: black;
+        color: white;
+        text-align: center;
+    }
+
+    button {
+        width: 80px;
+        height: 30px;
+        border-radius: 30px;
+        font-weight: 200;
+        transition: .3s;
+    }
+
+    button:hover {
+        background-color: rgb(255, 0, 0);
+        color: white;
+    }
+
+    table {
+        margin: 3px auto;
+    }
+
+    .timer span{
+        font-size: 35px;
+        font-weight: bold;
+    }
+
+    #title{
+        color: red;
+        animation: flash 1.5s linear infinite;
+        font-size: xx-large;
+    }
+
+    @keyframes flash {
+        0% 100% {
+            opacity: 1;
+        }
+
+        50% {
+            opacity: 0;
+        }
+    }
+</style>
+<body>
+    <h1 id="title">会員登録が完了しました</h1>
+    <h1>登録料50,000円</h1>
+    <p class="timer">支払期限まであと
+        <span id="day"></span>日
+        <span id="hour"></span>時
+        <span id="min"></span>分
+        <span id="sec"></span>秒
+    </p>
+    <p>登録ありがとうございます。</p>
+    <p>下にあなたの情報を明記しましたので、ご確認ください。</p>
+    <p>
+        <table border="1" bordercolor="white">
+        <tr>
+            <th></th>
+            <th>あなたの情報</th>
+        </tr>
+        <tr>
+            <td>会員番号</td>
+            <td id="number"></td>
+        </tr>
+        <tr>
+            <td>登録日時</td>
+            <td id="time"></td>
+        </tr>
+        <tr>
+            <td>IPアドレス</td>
+            <td id="ip"></td>
+        </tr>
+        </table>
+        
+    </p>
+
+    <p>会員情報を確認しましたら、「次へ」をクリックしてください。</p>
+    <!--お名前:<input type="text" id="name">
+    <p>メールアドレス:<input type="text" id="mail"></p>
+    <p>年齢: <input type="text" id="age"></p>
+    <p>住所: <input type="text" id="address"></p> -->
+    <p><button type="button" onclick="location.href='sub.html'">次へ</button></p> 
+
+
+
+</body>
+<script>
+    'use strict'; 
+    const now = new Date();
+    const nowyear = now.getFullYear();
+    const nowmonth = now.getMonth();
+    const nowdate = now.getDate();
+    const nowhour = now.getHours();
+    const nowmin = String(now.getMinutes()).padStart(2,'0');
+    const nowsec = String(now.getSeconds()).padStart(2,'0');
+
+    const output = `${nowyear}/${nowmonth + 1}/${nowdate} ${nowhour}:${nowmin}:${nowsec}`;
+    document.getElementById('time').textContent = output;
+</script>
+
+<script>
+    fetch('https://ipinfo.io?callback')
+  .then(res => res.json())
+  .then(json => document.getElementById('ip').textContent = json.ip)
+
+  document.getElementById('number').textContent = Math.floor(Math.random()*10000); 
+</script>
+
+<script>
+    'use strict'; 
+    function countdown (due) {
+        const now = new Date();
+
+        const rest = due.getTime() - now.getTime();
+        const sec = Math.floor(rest/1000) % 60;
+        const min = Math.floor(rest/1000/60)%60;
+        const hours = Math.floor(rest/1000/60/60)%24;
+        const days = Math.floor(rest/1000/60/60/24);
+        const count = [days,hours,min,sec];
+
+        return count;
+    }
+
+    const goal = new Date(2023, 9, 1);
+    
+
+    function recalc() {
+        const counter = countdown(goal);
+        document.getElementById('day').textContent = counter[0];
+        document.getElementById('hour').textContent = counter[1];
+        document.getElementById('min').textContent = String(counter[2]).padStart(2,'0');
+        document.getElementById('sec').textContent = String(counter[3]).padStart(2,'0');
+        reflesh();
+
+   }
+
+   function reflesh() {
+        setTimeout(recalc, 1000);
+   }
+
+   recalc();
+</script>
+</html>
