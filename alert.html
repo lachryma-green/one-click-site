@@ -13,7 +13,6 @@
     <h1 id="title">会員登録が完了しました</h1>
     <h1>登録料50,000円</h1>
     <p class="timer">支払期限まであと
-        <span id="day"></span>日
         <span id="hour"></span>時
         <span id="min"></span>分
         <span id="sec"></span>秒
@@ -76,36 +75,26 @@
 
 <script>
     'use strict'; 
-    function countdown (due) {
-        const now = new Date();
+    function countdown() {
+            const now = new Date();
+            const future = new Date(now.getTime() + 24 * 60 * 60 * 1000); // 現在の時間から1日後の時間
 
-        const rest = due.getTime() - now.getTime();
-        const sec = Math.floor(rest/1000) % 60;
-        const min = Math.floor(rest/1000/60)%60;
-        const hours = Math.floor(rest/1000/60/60)%24;
-        const days = Math.floor(rest/1000/60/60/24);
-        const count = [days,hours,min,sec];
+            function updateTimer() {
+                const now = new Date();
+                const rest = future.getTime() - now.getTime();
+                const sec = Math.floor(rest / 1000) % 60;
+                const min = Math.floor(rest / 1000 / 60) % 60;
+                const hours = Math.floor(rest / 1000 / 60 / 60) % 24;
 
-        return count;
-    }
+                document.getElementById('hour').textContent = hours;
+                document.getElementById('min').textContent = String(min).padStart(2, '0');
+                document.getElementById('sec').textContent = String(sec).padStart(2, '0');
+            }
 
-    const goal = new Date(2023, 9, 1);
-    
+            updateTimer();
+            setInterval(updateTimer, 1000); // タイマーを1秒ごとに更新
+        }
 
-    function recalc() {
-        const counter = countdown(goal);
-        document.getElementById('day').textContent = counter[0];
-        document.getElementById('hour').textContent = counter[1];
-        document.getElementById('min').textContent = String(counter[2]).padStart(2,'0');
-        document.getElementById('sec').textContent = String(counter[3]).padStart(2,'0');
-        reflesh();
-
-   }
-
-   function reflesh() {
-        setTimeout(recalc, 1000);
-   }
-
-   recalc();
-</script>
+        countdown();
+    </script>
 </html>
